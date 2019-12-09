@@ -21,11 +21,5 @@ if [ -e ../build/version.sh ]; then
 fi
 IMAGE=kappnav-operator
 
-# Update version numbers in yaml files
-./updateVersionsinYamls.sh
-
 echo "Building ${IMAGE} ${VERSION}"
 docker build --pull --build-arg VERSION=$VERSION --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') -t ${IMAGE} .
-
-# Restore original yaml files
-./restoreYamls.sh
