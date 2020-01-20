@@ -112,6 +112,15 @@ spec:
                 kubeEnv:
                   type: string
               type: object
+            logging:
+              properties:
+                controller:
+                  type: string
+                operator:
+                  type: string
+                ui:
+                  type: string
+              type: object
             extensionContainers:
               additionalProperties:
                 properties:

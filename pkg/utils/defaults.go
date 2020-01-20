@@ -1,5 +1,5 @@
 /*
-Copyright 2019 IBM Corporation
+Copyright 2019, 2020 IBM Corporation
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -31,6 +31,7 @@ func SetKappnavDefaults(instance *kappnavv1.Kappnav) error {
 	setExtensionContainerDefaults(instance, defaults)
 	setImageDefaults(instance, defaults)
 	setEnvironmentDefaults(instance, defaults)
+	setLoggingDefaults(instance, defaults)
 	return nil
 }
 
@@ -151,5 +152,19 @@ func setEnvironmentDefaults(instance *kappnavv1.Kappnav, defaults *kappnavv1.Kap
 		if len(env.KubeEnv) == 0 {
 			env.KubeEnv = defaults.Spec.Env.KubeEnv
 		}
+	}
+}
+
+func setLoggingDefaults(instance *kappnavv1.Kappnav, defaults *kappnavv1.Kappnav) {
+	logging := instance.Spec.Logging
+	if logging == nil {
+		instance.Spec.Logging = defaults.Spec.Logging
+	} else {
+		// TODO
+	}
+
+    // temp code attempting to ensure something in Logging is set
+	if len(logging.UI) == 0 {
+		instance.Spec.Logging.UI = "info";
 	}
 }
