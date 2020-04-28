@@ -410,6 +410,21 @@ func CreateUIDeploymentContainers(existingContainers []corev1.Container, instanc
 			}
 		}
 	}
+	
+	// Add the UI log level env var to the api server. If api finds this env variable, 
+	// it will start watching for UI logging changes and notify the UI when they change
+	var containsUiLogLevelVar = false
+	if apiEnv != nil {
+		for _, a := range apiEnv {
+			if a.Name == "UI_LOG_LEVEL_API" {
+				containsUiLogLevelVar = true
+			}
+		}
+	}
+	if(containsUiLogLevelVar == false) {
+		apiEnv = append(apiEnv, corev1.EnvVar{Name:  "UI_LOG_LEVEL_API", Value: "http://localhost:3000/extensions/logLevel"})
+	}
+	
 	containers := []corev1.Container{
 		*createContainer(APIContainerName, instance, instance.Spec.AppNavAPI, apiEnv,
 			createAPIReadinessProbe(), createAPILivenessProbe(), nil, nil, nil),
