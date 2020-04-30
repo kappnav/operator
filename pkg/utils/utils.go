@@ -73,18 +73,18 @@ func GetLabels(instance *kappnavv1.Kappnav,
 	labels["app.kubernetes.io/name"] = instance.Name
 	labels["app.kubernetes.io/instance"] = instance.Name
 	labels["app.kubernetes.io/managed-by"] = "kappnav-operator"
-	if existingLabels["kappnav.io/map-type"] == ""  {
+	if existingLabels["kappnav.io/map-type"] == "" {
 		if strings.HasSuffix(mapType, "action") {
 			labels["kappnav.io/map-type"] = "action"
 		} else if strings.HasSuffix(mapType, "status") {
 			labels["kappnav.io/map-type"] = "status"
 		} else if strings.HasSuffix(mapType, "sections") {
 			labels["kappnav.io/map-type"] = "sections"
-		} else if strings.HasSuffix(mapType, "builtin"){
+		} else if strings.HasSuffix(mapType, "builtin") {
 			labels["kappnav.io/map-type"] = "builtin"
 		}
 	}
-		
+
 	if component != nil && len(component.Name) > 0 {
 		labels["app.kubernetes.io/component"] = component.GetName()
 	}
@@ -115,7 +115,7 @@ func CustomizeServiceAccount(logger Logger, sa *corev1.ServiceAccount, uiService
 	}
 	// Adding the OAuth proxy to the service account.
 	sa.Annotations[OAuthRedirectAnnotationName] = "{\"kind\":\"OAuthRedirectReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"Route\",\"name\":\"" + uiService.GetName() + "\"}}"
-	
+
 	// Retrieving pull secrets from kappnav CR and adding them to the service account.
 	pullSecrets := instance.Spec.Image.PullSecrets
 	if pullSecrets != nil && len(pullSecrets) != 0 {
@@ -189,7 +189,7 @@ func CustomizeUIServiceSpec(serviceSpec *corev1.ServiceSpec, instance *kappnavv1
 	isMinikube := IsMinikubeEnv(instance.Spec.Env.KubeEnv)
 	if isMinikube {
 		serviceSpec.Type = corev1.ServiceTypeNodePort
-	} 
+	}
 
 	if serviceSpec.Ports == nil || len(serviceSpec.Ports) == 0 {
 		if isMinikube {
@@ -270,22 +270,22 @@ func CustomizeUIRouteSpec(routeSpec *routev1.RouteSpec,
 
 // CustomizeDeployment ...
 func CustomizeDeployment(deploy *appsv1.Deployment, instance *kappnavv1.Kappnav) {
-	deploy.Labels = GetLabels(instance, deploy.Labels, &deploy.ObjectMeta, "")	
+	deploy.Labels = GetLabels(instance, deploy.Labels, &deploy.ObjectMeta, "")
 	// Ensure that there's at least one replica
 	if deploy.Spec.Replicas == nil || *deploy.Spec.Replicas < 1 {
 		one := int32(1)
 		deploy.Spec.Replicas = &one
-	}	
+	}
 	deploy.Spec.Selector = &metav1.LabelSelector{
 		MatchLabels: map[string]string{
 			"app.kubernetes.io/component": deploy.GetName(),
 		},
-	}	
+	}
 }
 
 // CustomizePodSpec ...
 func CustomizePodSpec(pts *corev1.PodTemplateSpec, parentComponent *metav1.ObjectMeta,
-	containers []corev1.Container, volumes []corev1.Volume, instance *kappnavv1.Kappnav) {	
+	containers []corev1.Container, volumes []corev1.Volume, instance *kappnavv1.Kappnav) {
 	pts.Labels = GetLabels(instance, pts.Labels, parentComponent, "")
 	pts.Spec.Containers = containers
 	pts.Spec.RestartPolicy = corev1.RestartPolicyAlways
@@ -410,8 +410,8 @@ func CreateUIDeploymentContainers(existingContainers []corev1.Container, instanc
 			}
 		}
 	}
-	
-	// Add the UI log level env var to the api server. If api finds this env variable, 
+
+	// Add the UI log level env var to the api server. If api finds this env variable,
 	// it will start watching for UI logging changes and notify the UI when they change
 	var containsUiLogLevelVar = false
 	if apiEnv != nil {
@@ -421,10 +421,10 @@ func CreateUIDeploymentContainers(existingContainers []corev1.Container, instanc
 			}
 		}
 	}
-	if(containsUiLogLevelVar == false) {
-		apiEnv = append(apiEnv, corev1.EnvVar{Name:  "UI_LOG_LEVEL_API", Value: "http://localhost:3000/extensions/logLevel"})
+	if containsUiLogLevelVar == false {
+		apiEnv = append(apiEnv, corev1.EnvVar{Name: "UI_LOG_LEVEL_API", Value: "http://localhost:3000/extensions/logLevel"})
 	}
-	
+
 	containers := []corev1.Container{
 		*createContainer(APIContainerName, instance, instance.Spec.AppNavAPI, apiEnv,
 			createAPIReadinessProbe(), createAPILivenessProbe(), nil, nil, nil),
@@ -486,9 +486,15 @@ func createContainer(name string, instance *kappnavv1.Kappnav,
 	ports []corev1.ContainerPort,
 	args []string,
 	volumeMount *corev1.VolumeMount) *corev1.Container {
+	var imageSeparator string
+	if containerConfig.IsDigest {
+		imageSeparator = "@"
+	} else {
+		imageSeparator = ":"
+	}
 	container := &corev1.Container{
 		Name:            name,
-		Image:           string(containerConfig.Repository) + ":" + string(containerConfig.Tag),
+		Image:           string(containerConfig.Repository) + imageSeparator + string(containerConfig.Tag),
 		ImagePullPolicy: instance.Spec.Image.PullPolicy,
 		Env: []corev1.EnvVar{
 			{
@@ -561,8 +567,8 @@ func createAPIReadinessProbe() *corev1.Probe {
 				Port:   intstr.FromInt(9443),
 			},
 		},
-		InitialDelaySeconds: 90,   
-		TimeoutSeconds:      5, 
+		InitialDelaySeconds: 90,
+		TimeoutSeconds:      5,
 		PeriodSeconds:       15,
 		FailureThreshold:    6,
 	}
@@ -868,4 +874,3 @@ func containSecret(array []corev1.LocalObjectReference, secretName string) bool 
 	}
 	return false
 }
-

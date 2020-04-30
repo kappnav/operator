@@ -105,6 +105,7 @@ func setContainerDefaults(containerConfig *kappnavv1.KappnavContainerConfigurati
 	if len(containerConfig.Tag) == 0 {
 		containerConfig.Tag = defaultContainerConfig.Tag
 	}
+	containerConfig.IsDigest = defaultContainerConfig.IsDigest
 	if containerConfig.Resources == nil {
 		containerConfig.Resources = defaultContainerConfig.Resources
 	} else {

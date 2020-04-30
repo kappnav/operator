@@ -11,6 +11,7 @@ spec:
   appNavAPI:
     repository: kappnav/apis
     tag: KAPPNAV_VERSION
+    isDigest : false
     resources:
       enabled: false
       requests:
@@ -27,6 +28,7 @@ spec:
   appNavController:
     repository: kappnav/controller
     tag: KAPPNAV_VERSION
+    isDigest : false
     resources:
       enabled: false
       requests:
@@ -43,6 +45,7 @@ spec:
   appNavUI:
     repository: kappnav/ui
     tag: KAPPNAV_VERSION
+    isDigest : false
     resources:
       enabled: false
       requests:
@@ -81,6 +84,7 @@ spec:
     oauthProxy:
       repository: quay.io/openshift/origin-oauth-proxy
       tag: 4.3.0
+      isDigest : false
       resources:
         enabled: false
         requests:
@@ -92,6 +96,7 @@ spec:
     appNavInv:
       repository: kappnav/inv
       tag: KAPPNAV_VERSION
+      isDigest : false
       resources:
         enabled: false
         requests:
