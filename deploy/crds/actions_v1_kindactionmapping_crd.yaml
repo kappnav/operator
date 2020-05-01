@@ -37,12 +37,15 @@ spec:
                 properties:
                   apiVersion:
                     type: string
-                  owner:
-                    type: string
-                  ownerUID:
-                    type: string
-                  ownerAPI: 
-                    type: string
+                  owner: 
+                    properties:
+                      kind:
+                        type: string
+                      apiVersion:
+                        type: string
+                      uid: 
+                        type: string
+                    type: object
                   kind:
                     type: string
                   mapname:

@@ -19,14 +19,19 @@ type KindActionMappingSpec struct {
 
 // MappingConfiguration defines resource constraints for Mapping configuration
 type MappingConfiguration struct {
-	APIVersion string `json:"apiVersion,omitempty"`
-	Owner      string `json:"owner,omitempty"`
-	OwnerUID   string `json:"ownerUID,omitempty"`
-	OwnerAPI   string `json:"ownerAPI,omitempty"`
+	APIVersion string             `json:"apiVersion,omitempty"`
+	Owner      OwnerConfiguration `json:"owner,omitempty"`
+	Kind       string             `json:"kind,omitempty"`
+	Subkind    string             `json:"subkind,omitempty"`
+	Name       string             `json:"name,omitempty"`
+	Mapname    string             `json:"mapname,omitempty"`
+}
+
+// OwnerConfiguration defines resource constraints for Owner configuration
+type OwnerConfiguration struct {
 	Kind       string `json:"kind,omitempty"`
-	Subkind    string `json:"subkind,omitempty"`
-	Name       string `json:"name,omitempty"`
-	Mapname    string `json:"mapname,omitempty"`
+	UID        string `json:"uid,omitempty"`
+	APIVersion string `json:"apiVersion,omitempty"`
 }
 
 // KindActionMappingStatus defines the observed state of KindActionMapping
