@@ -31,8 +31,6 @@ spec:
           properties:
             appNavAPI:
               properties:
-                isDigest:
-                  type: boolean
                 repository:
                   type: string
                 resources:
@@ -59,8 +57,6 @@ spec:
               type: object
             appNavController:
               properties:
-                isDigest:
-                  type: boolean
                 repository:
                   type: string
                 resources:
@@ -87,8 +83,6 @@ spec:
               type: object
             appNavUI:
               properties:
-                isDigest:
-                  type: boolean
                 repository:
                   type: string
                 resources:
@@ -121,8 +115,6 @@ spec:
             extensionContainers:
               additionalProperties:
                 properties:
-                  isDigest:
-                    type: boolean
                   repository:
                     type: string
                   resources:

@@ -37,7 +37,6 @@ type KappnavSpec struct {
 type KappnavContainerConfiguration struct {
 	Repository Repository                  `json:"repository,omitempty"`
 	Tag        Tag                         `json:"tag,omitempty"`
-	IsDigest   bool                        `json:"isDigest,omitempty"`
 	Resources  *KappnavResourceConstraints `json:"resources,omitempty"`
 }
 

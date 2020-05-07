@@ -486,15 +486,19 @@ func createContainer(name string, instance *kappnavv1.Kappnav,
 	ports []corev1.ContainerPort,
 	args []string,
 	volumeMount *corev1.VolumeMount) *corev1.Container {
+	tagOrDigest := string(containerConfig.Tag)
 	var imageSeparator string
-	if containerConfig.IsDigest {
+	// A tag value cannot contain a ':'. If it includes a ':' assume it is a digest value.
+	if strings.Contains(tagOrDigest, ":") {
+		// Digest separator
 		imageSeparator = "@"
 	} else {
+		// Tag separator
 		imageSeparator = ":"
 	}
 	container := &corev1.Container{
 		Name:            name,
-		Image:           string(containerConfig.Repository) + imageSeparator + string(containerConfig.Tag),
+		Image:           string(containerConfig.Repository) + imageSeparator + tagOrDigest,
 		ImagePullPolicy: instance.Spec.Image.PullPolicy,
 		Env: []corev1.EnvVar{
 			{
