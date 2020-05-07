@@ -11,7 +11,11 @@ data:
         "text.nls": "action.cmd.kappnav.inventory.text",
         "description": "Take inventory of all kappnav resources.",
         "description.nls": "action.cmd.kappnav.inventory.desc",
+{{ if contains .Spec.ExtensionContainers.appNavInv.Tag ":" }}
+        "image": "{{ .Spec.ExtensionContainers.appNavInv.Repository }}@{{ .Spec.ExtensionContainers.appNavInv.Tag }}",
+{{ else }}
         "image": "{{ .Spec.ExtensionContainers.appNavInv.Repository }}:{{ .Spec.ExtensionContainers.appNavInv.Tag }}",
+{{ end }}
         "cmd-pattern": "./inventory.sh"
       }
     ]
