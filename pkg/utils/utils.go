@@ -23,7 +23,6 @@ import (
 
 	kamv1 "github.com/kappnav/operator/pkg/apis/actions/v1"
 	kappnavv1 "github.com/kappnav/operator/pkg/apis/kappnav/v1"
-	v1 "github.com/kappnav/operator/pkg/apis/kappnav/v1"
 	appv1beta1 "github.com/kubernetes-sigs/application/pkg/apis/app/v1beta1"
 	routev1 "github.com/openshift/api/route/v1"
 	"github.com/pkg/errors"
@@ -869,32 +868,32 @@ func FormatTimestamp(t time.Time) float64 {
 }
 
 // RepositoryContains ... For use in ConfigMap templates.
-func RepositoryContains(r v1.Repository, substr string) bool {
+func RepositoryContains(r kappnavv1.Repository, substr string) bool {
 	return strings.Contains(string(r), substr)
 }
 
 // RepositoryHasPrefix ... For use in ConfigMap templates.
-func RepositoryHasPrefix(r v1.Repository, prefix string) bool {
+func RepositoryHasPrefix(r kappnavv1.Repository, prefix string) bool {
 	return strings.HasPrefix(string(r), prefix)
 }
 
 // RepositoryHasSuffix ... For use in ConfigMap templates.
-func RepositoryHasSuffix(r v1.Repository, suffix string) bool {
+func RepositoryHasSuffix(r kappnavv1.Repository, suffix string) bool {
 	return strings.HasSuffix(string(r), suffix)
 }
 
 // TagContains ... For use in ConfigMap templates.
-func TagContains(t v1.Tag, substr string) bool {
+func TagContains(t kappnavv1.Tag, substr string) bool {
 	return strings.Contains(string(t), substr)
 }
 
 // TagHasPrefix ... For use in ConfigMap templates.
-func TagHasPrefix(t v1.Tag, prefix string) bool {
+func TagHasPrefix(t kappnavv1.Tag, prefix string) bool {
 	return strings.HasPrefix(string(t), prefix)
 }
 
 // TagHasSuffix ... For use in ConfigMap templates.
-func TagHasSuffix(t v1.Tag, suffix string) bool {
+func TagHasSuffix(t kappnavv1.Tag, suffix string) bool {
 	return strings.HasSuffix(string(t), suffix)
 }
 
