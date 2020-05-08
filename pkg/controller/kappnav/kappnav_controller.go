@@ -24,7 +24,6 @@ import (
 
 	kamv1 "github.com/kappnav/operator/pkg/apis/actions/v1"
 	kappnavv1 "github.com/kappnav/operator/pkg/apis/kappnav/v1"
-	"github.com/kappnav/operator/pkg/utils"
 	kappnavutils "github.com/kappnav/operator/pkg/utils"
 	appv1beta1 "github.com/kubernetes-sigs/application/pkg/apis/app/v1beta1"
 	routev1 "github.com/openshift/api/route/v1"
@@ -458,12 +457,12 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 						"contains":            strings.Contains,
 						"hasPrefix":           strings.HasPrefix,
 						"hasSuffix":           strings.HasSuffix,
-						"repositoryContains":  utils.RepositoryContains,
-						"repositoryHasPrefix": utils.RepositoryHasPrefix,
-						"repositoryHasSuffix": utils.RepositoryHasSuffix,
-						"tagContains":         utils.TagContains,
-						"tagHasPrefix":        utils.TagHasPrefix,
-						"tagHasSuffix":        utils.TagHasSuffix,
+						"repositoryContains":  kappnavutils.RepositoryContains,
+						"repositoryHasPrefix": kappnavutils.RepositoryHasPrefix,
+						"repositoryHasSuffix": kappnavutils.RepositoryHasSuffix,
+						"tagContains":         kappnavutils.TagContains,
+						"tagHasPrefix":        kappnavutils.TagHasPrefix,
+						"tagHasSuffix":        kappnavutils.TagHasSuffix,
 					}
 					// Parse the file into a template.
 					t, err := template.New(fileName).Funcs(funcMap).Parse(string(fData))
