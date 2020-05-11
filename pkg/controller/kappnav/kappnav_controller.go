@@ -452,8 +452,20 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 						}
 						return r.ManageError(logger, err, kappnavv1.StatusConditionTypeReconciled, instance)
 					}
+					// Expose some useful functions to the template.
+					funcMap := template.FuncMap{
+						"contains":            strings.Contains,
+						"hasPrefix":           strings.HasPrefix,
+						"hasSuffix":           strings.HasSuffix,
+						"repositoryContains":  kappnavutils.RepositoryContains,
+						"repositoryHasPrefix": kappnavutils.RepositoryHasPrefix,
+						"repositoryHasSuffix": kappnavutils.RepositoryHasSuffix,
+						"tagContains":         kappnavutils.TagContains,
+						"tagHasPrefix":        kappnavutils.TagHasPrefix,
+						"tagHasSuffix":        kappnavutils.TagHasSuffix,
+					}
 					// Parse the file into a template.
-					t, err := template.New(fileName).Parse(string(fData))
+					t, err := template.New(fileName).Funcs(funcMap).Parse(string(fData))
 					if err != nil {
 						if logger.IsEnabled(kappnavutils.LogTypeError) {
 							logger.Log(kappnavutils.CallerName(), kappnavutils.LogTypeError, fmt.Sprintf("Failed to parse template file: %s "+otherLogData+", Error: %s ", fileName, err), logName)
