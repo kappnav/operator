@@ -45,3 +45,18 @@ spec:
    - apiVersion: '*'
      kind: '*'
      mapname: kappnav.actions.${kind}
+
+   statusMappings:
+   - apiVersion: '*'
+     kind: '*'
+     mapname: kappnav.status-mapping.${kind}
+   - apiVersion: '*/*'
+     kind: '*'
+     mapname: kappnav.status-mapping.${kind}
+   detailsMappings:
+   - apiVersion: '*'
+     kind: '*'
+     mapname: kappnav.sections.${kind}
+   - apiVersion: '*/*'
+     kind: '*'
+     mapname: kappnav.sections.${kind}
