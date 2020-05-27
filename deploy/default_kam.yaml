@@ -46,17 +46,25 @@ spec:
      kind: '*'
      mapname: kappnav.actions.${kind}
 
+   - apiVersion: 'app.k8s.io/v1beta1'
+     name: 'kappnav'
+     kind: 'Application'
+     mapname: kappnav.actions.application.kappnav
+
    statusMappings:
    - apiVersion: '*'
      kind: '*'
      mapname: kappnav.status-mapping.${kind}
+   
    - apiVersion: '*/*'
      kind: '*'
      mapname: kappnav.status-mapping.${kind}
-   detailsMappings:
+   
+   sectionMappings:
    - apiVersion: '*'
      kind: '*'
      mapname: kappnav.sections.${kind}
+   
    - apiVersion: '*/*'
      kind: '*'
      mapname: kappnav.sections.${kind}

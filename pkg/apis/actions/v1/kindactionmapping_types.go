@@ -16,7 +16,7 @@ type KindActionMappingSpec struct {
 	Precedence      int                    `json:"precedence,omitempty"`
 	Mappings        []MappingConfiguration `json:"mappings,omitempty"`
 	StatusMappings  []MappingConfiguration `json:"statusMappings,omitempty"`
-	DetailsMappings []MappingConfiguration `json:"detailsMappings,omitempty"`
+	SectionMappings []MappingConfiguration `json:"sectionMappings,omitempty"`
 }
 
 // MappingConfiguration defines resource constraints for Mapping configuration

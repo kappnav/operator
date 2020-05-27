@@ -82,8 +82,8 @@ func (in *KindActionMappingSpec) DeepCopyInto(out *KindActionMappingSpec) {
 		*out = make([]MappingConfiguration, len(*in))
 		copy(*out, *in)
 	}
-	if in.DetailsMappings != nil {
-		in, out := &in.DetailsMappings, &out.DetailsMappings
+	if in.SectionMappings != nil {
+		in, out := &in.SectionMappings, &out.SectionMappings
 		*out = make([]MappingConfiguration, len(*in))
 		copy(*out, *in)
 	}

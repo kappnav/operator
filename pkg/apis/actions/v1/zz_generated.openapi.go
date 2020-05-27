@@ -97,7 +97,7 @@ func schema_pkg_apis_actions_v1_KindActionMappingSpec(ref common.ReferenceCallba
 							},
 						},
 					},
-					"detailsMappings": {
+					"sectionMappings": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{

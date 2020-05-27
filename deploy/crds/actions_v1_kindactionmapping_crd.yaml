@@ -32,30 +32,6 @@ spec:
           type: object
         spec:
           properties:
-            detailsMappings:
-              items:
-                properties:
-                  apiVersion:
-                    type: string
-                  kind:
-                    type: string
-                  mapname:
-                    type: string
-                  name:
-                    type: string
-                  owner:
-                    properties:
-                      apiVersion:
-                        type: string
-                      kind:
-                        type: string
-                      uid:
-                        type: string
-                    type: object
-                  subkind:
-                    type: string
-                type: object
-              type: array
             mappings:
               items:
                 properties:
@@ -87,6 +63,30 @@ spec:
                 https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html'
               format: int64
               type: integer
+            sectionMappings:
+              items:
+                properties:
+                  apiVersion:
+                    type: string
+                  kind:
+                    type: string
+                  mapname:
+                    type: string
+                  name:
+                    type: string
+                  owner:
+                    properties:
+                      apiVersion:
+                        type: string
+                      kind:
+                        type: string
+                      uid:
+                        type: string
+                    type: object
+                  subkind:
+                    type: string
+                type: object
+              type: array
             statusMappings:
               items:
                 properties:
