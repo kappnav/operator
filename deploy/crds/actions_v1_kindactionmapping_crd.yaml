@@ -8,10 +8,10 @@ spec:
     kind: KindActionMapping
     listKind: KindActionMappingList
     plural: kindactionmappings
-    singular: kindactionmapping
     shortNames:
     - kam
     - kams
+    singular: kindactionmapping
   scope: Namespaced
   subresources:
     status: {}
@@ -37,21 +37,21 @@ spec:
                 properties:
                   apiVersion:
                     type: string
-                  owner: 
-                    properties:
-                      kind:
-                        type: string
-                      apiVersion:
-                        type: string
-                      uid: 
-                        type: string
-                    type: object
                   kind:
                     type: string
                   mapname:
                     type: string
                   name:
                     type: string
+                  owner:
+                    properties:
+                      apiVersion:
+                        type: string
+                      kind:
+                        type: string
+                      uid:
+                        type: string
+                    type: object
                   subkind:
                     type: string
                 type: object
@@ -63,6 +63,54 @@ spec:
                 https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html'
               format: int64
               type: integer
+            sectionMappings:
+              items:
+                properties:
+                  apiVersion:
+                    type: string
+                  kind:
+                    type: string
+                  mapname:
+                    type: string
+                  name:
+                    type: string
+                  owner:
+                    properties:
+                      apiVersion:
+                        type: string
+                      kind:
+                        type: string
+                      uid:
+                        type: string
+                    type: object
+                  subkind:
+                    type: string
+                type: object
+              type: array
+            statusMappings:
+              items:
+                properties:
+                  apiVersion:
+                    type: string
+                  kind:
+                    type: string
+                  mapname:
+                    type: string
+                  name:
+                    type: string
+                  owner:
+                    properties:
+                      apiVersion:
+                        type: string
+                      kind:
+                        type: string
+                      uid:
+                        type: string
+                    type: object
+                  subkind:
+                    type: string
+                type: object
+              type: array
           type: object
         status:
           type: object

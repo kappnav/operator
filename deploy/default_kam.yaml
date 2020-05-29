@@ -50,3 +50,21 @@ spec:
      name: 'kappnav'
      kind: 'Application'
      mapname: kappnav.actions.application.kappnav
+
+   statusMappings:
+   - apiVersion: '*'
+     kind: '*'
+     mapname: kappnav.status-mapping.${kind}
+   
+   - apiVersion: '*/*'
+     kind: '*'
+     mapname: kappnav.status-mapping.${kind}
+   
+   sectionMappings:
+   - apiVersion: '*'
+     kind: '*'
+     mapname: kappnav.sections.${kind}
+   
+   - apiVersion: '*/*'
+     kind: '*'
+     mapname: kappnav.sections.${kind}

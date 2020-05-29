@@ -13,8 +13,10 @@ type KindActionMappingSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
-	Precedence int                    `json:"precedence,omitempty"`
-	Mappings   []MappingConfiguration `json:"mappings,omitempty"`
+	Precedence      int                    `json:"precedence,omitempty"`
+	Mappings        []MappingConfiguration `json:"mappings,omitempty"`
+	StatusMappings  []MappingConfiguration `json:"statusMappings,omitempty"`
+	SectionMappings []MappingConfiguration `json:"sectionMappings,omitempty"`
 }
 
 // MappingConfiguration defines resource constraints for Mapping configuration
@@ -47,6 +49,7 @@ type KindActionMappingStatus struct {
 // KindActionMapping is the Schema for the kindactionmappings API
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:path=kindactionmappings,shortName=kam;kams
 type KindActionMapping struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

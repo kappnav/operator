@@ -85,6 +85,30 @@ func schema_pkg_apis_actions_v1_KindActionMappingSpec(ref common.ReferenceCallba
 							},
 						},
 					},
+					"statusMappings": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("./pkg/apis/actions/v1.MappingConfiguration"),
+									},
+								},
+							},
+						},
+					},
+					"sectionMappings": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("./pkg/apis/actions/v1.MappingConfiguration"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
