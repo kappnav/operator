@@ -15,7 +15,7 @@ package utils
 
 import (
 	"io/ioutil"
-
+	
 	kamv1 "github.com/kappnav/operator/pkg/apis/actions/v1"
 	kappnavv1 "github.com/kappnav/operator/pkg/apis/kappnav/v1"
 	"sigs.k8s.io/yaml"
@@ -33,7 +33,8 @@ func SetKappnavDefaults(instance *kappnavv1.Kappnav) error {
 	setExtensionContainerDefaults(instance, defaults)
 	setImageDefaults(instance, defaults)
 	setEnvironmentDefaults(instance, defaults)
-	setLoggingDefaults(instance, defaults)
+	setLoggingDefaults(instance, defaults)	
+	setAutoCreateKindsDefaults(instance, defaults)
 	return nil
 }
 
@@ -202,3 +203,19 @@ func setLoggingDefaults(instance *kappnavv1.Kappnav, defaults *kappnavv1.Kappnav
 		}
 	}
 }
+
+// set default logging values
+func setAutoCreateKindsDefaults(instance *kappnavv1.Kappnav, defaults *kappnavv1.Kappnav) {
+    autoCreateKinds := instance.Spec.AutoCreateKinds
+    if len(autoCreateKinds) == 0 {
+        instance.Spec.AutoCreateKinds = defaults.Spec.AutoCreateKinds
+    } else {
+		defaultAutoCreateKinds := defaults.Spec.AutoCreateKinds
+        for i, _ := range autoCreateKinds {
+            autoCreateKinds[i].Group = defaultAutoCreateKinds[i].Group
+            autoCreateKinds[i].Kind = defaultAutoCreateKinds[i].Kind           
+        }       
+	}
+}
+
+
