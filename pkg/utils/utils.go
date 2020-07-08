@@ -55,6 +55,13 @@ const (
 	OAuthVolumeName string = "ui-service-tls"
 	// OAuthVolumeMountPath ...
 	OAuthVolumeMountPath string = "/etc/tls/private"
+
+	// OAuthCABundleVolumeName ...
+	OAuthCABundleVolumeName string = "ocp-ca-bundle"
+	// OAuthCABundleVolumeMountPath ...
+	OAuthCABundleVolumeMountPath string = "/etc/ocp-ca-bundle"
+	//OAuthCABundlePath
+	OAuthCABundlePath string = "tls-ca-bundle.pem"
 )
 
 // GetLabels ...
@@ -416,8 +423,23 @@ func CreateControllerDeploymentContainers(existingContainers []corev1.Container,
 
 // CreateUIVolumes ...
 func CreateUIVolumes(instance *kappnavv1.Kappnav) []corev1.Volume {
+	cabundleVolumenName := instance.Name + "-" + OAuthCABundleVolumeName
 	name := instance.Name + "-" + OAuthVolumeName
 	return []corev1.Volume{
+		{
+			Name: cabundleVolumenName,
+			VolumeSource: corev1.VolumeSource{
+				ConfigMap: &corev1.ConfigMapVolumeSource{
+					LocalObjectReference: corev1.LocalObjectReference{Name: cabundleVolumenName},
+					Items: []corev1.KeyToPath{
+						{
+							Key:  "ca-bundle.crt",
+							Path: OAuthCABundlePath,
+						},
+					},
+				},
+			},
+		},
 		{
 			Name: name,
 			VolumeSource: corev1.VolumeSource{
@@ -436,7 +458,7 @@ func createContainer(name string, instance *kappnavv1.Kappnav,
 	livenessProbe *corev1.Probe,
 	ports []corev1.ContainerPort,
 	args []string,
-	volumeMount *corev1.VolumeMount) *corev1.Container {
+	volumeMounts []corev1.VolumeMount) *corev1.Container {
 	container := &corev1.Container{
 		Name:            name,
 		Image:           string(containerConfig.Repository) + ":" + string(containerConfig.Tag),
@@ -471,8 +493,8 @@ func createContainer(name string, instance *kappnavv1.Kappnav,
 		}
 	}
 	// Add volume mount if specified.
-	if volumeMount != nil {
-		container.VolumeMounts = []corev1.VolumeMount{*volumeMount}
+	if volumeMounts != nil {
+		container.VolumeMounts = volumeMounts
 	}
 	// Apply resource constraints if enabled.
 	if containerConfig.Resources.Enabled {
@@ -577,15 +599,24 @@ func createOAuthProxyArgs(instance *kappnavv1.Kappnav) []string {
 		"--cookie-name=ssn",
 		"--cookie-expire=24h",
 		"--skip-auth-regex=.*appLauncher.js|.*featuredApp.js|.*appNavIcon.css|.*KAppNavlogo.svg",
+		"--openshift-ca="+OAuthCABundleVolumeMountPath+"/"+OAuthCABundlePath,
+		"--openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
 	}
 }
 
-func createOAuthProxyVolumeMount(instance *kappnavv1.Kappnav) *corev1.VolumeMount {
-	volumeMount := &corev1.VolumeMount{
-		MountPath: OAuthVolumeMountPath,
-		Name:      instance.Name + "-" + OAuthVolumeName,
+func createOAuthProxyVolumeMount(instance *kappnavv1.Kappnav) []corev1.VolumeMount {
+	cabundleVolumeName := instance.Name + "-" + OAuthCABundleVolumeName
+	name := instance.Name + "-" + OAuthVolumeName
+	return []corev1.VolumeMount{
+		{
+			MountPath: OAuthCABundleVolumeMountPath,
+			Name:      cabundleVolumeName,
+		},
+		{
+			MountPath: OAuthVolumeMountPath,
+			Name:      name,
+		},
 	}
-	return volumeMount
 }
 
 func createControllerReadinessProbe() *corev1.Probe {
