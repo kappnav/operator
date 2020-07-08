@@ -378,7 +378,7 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 		return nil
 	})
 	if err != nil {
-		reqLogger.Error(err, "Failed to reconcile the kappnav-config ConfigMap")
+		reqLogger.Error(err, "Failed to reconcile the builtin ConfigMap")
 		return r.ManageError(err, kappnavv1.StatusConditionTypeReconciled, instance)
 	}
 
@@ -392,10 +392,11 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 		},
 	}
 	err = r.CreateOrUpdate(cabundleConfig, instance, func() error {
+		kappnavutils.CustomizeConfigMap(cabundleConfig, instance)
 		return nil
 	})
 	if err != nil {
-                reqLogger.Error(err, "Failed to reconcile the kappnav-config ConfigMap")
+                reqLogger.Error(err, "Failed to reconcile the ocap-ca-bundle ConfigMap")
 		return r.ManageError(err, kappnavv1.StatusConditionTypeReconciled, instance)
 	}
 
