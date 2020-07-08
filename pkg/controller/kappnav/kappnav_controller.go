@@ -378,7 +378,25 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 		return nil
 	})
 	if err != nil {
-		reqLogger.Error(err, "Failed to reconcile the kappnav-config ConfigMap")
+		reqLogger.Error(err, "Failed to reconcile the builtin ConfigMap")
+		return r.ManageError(err, kappnavv1.StatusConditionTypeReconciled, instance)
+	}
+
+	//Create or update the cabundle
+	injectCABundleLabel := map[string]string{"config.openshift.io/inject-trusted-cabundle": "true"}
+	cabundleConfig := &corev1.ConfigMap{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      instance.GetName()+ "-" + "ocp-ca-bundle",
+			Namespace: instance.GetNamespace(),
+			Labels: injectCABundleLabel,
+		},
+	}
+	err = r.CreateOrUpdate(cabundleConfig, instance, func() error {
+		kappnavutils.CustomizeConfigMap(cabundleConfig, instance)
+		return nil
+	})
+	if err != nil {
+                reqLogger.Error(err, "Failed to reconcile the ocap-ca-bundle ConfigMap")
 		return r.ManageError(err, kappnavv1.StatusConditionTypeReconciled, instance)
 	}
 
