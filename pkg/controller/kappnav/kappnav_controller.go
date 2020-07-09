@@ -551,7 +551,7 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
                 logger.Log(kappnavutils.CallerName(), kappnavutils.LogTypeInfo, "Create or update cabundle config"+otherLogData, logName)
         }
 	err = r.CreateOrUpdate(logger, cabundleConfig, instance, func() error {
-		kappnavutils.CustomizeConfigMap(cabundleConfig, instance, "cabundle")
+		kappnavutils.CustomizeConfigMap(cabundleConfig, instance, "builtin")
 		return nil
 	})
 	if err != nil {
