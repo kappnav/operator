@@ -533,9 +533,32 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 	})
 	if err != nil {
 		if logger.IsEnabled(kappnavutils.LogTypeError) {
-			logger.Log(kappnavutils.CallerName(), kappnavutils.LogTypeError, fmt.Sprintf("Failed to reconcile the kappnav-config ConfigMap"+otherLogData+", Error: %s ", err), logName)
+			logger.Log(kappnavutils.CallerName(), kappnavutils.LogTypeError, fmt.Sprintf("Failed to reconcile the builtin ConfigMap"+otherLogData+", Error: %s ", err), logName)
 		}
 		return r.ManageError(logger, err, kappnavv1.StatusConditionTypeReconciled, instance)
+	}
+
+	//Create or update the cabundle
+	injectCABundleLabel := map[string]string{"config.openshift.io/inject-trusted-cabundle": "true"}
+	cabundleConfig := &corev1.ConfigMap{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      instance.GetName()+ "-" + "ocp-ca-bundle",
+			Namespace: instance.GetNamespace(),
+			Labels: injectCABundleLabel,
+		},
+	}
+        if logger.IsEnabled(kappnavutils.LogTypeInfo) {
+                logger.Log(kappnavutils.CallerName(), kappnavutils.LogTypeInfo, "Create or update cabundle config"+otherLogData, logName)
+        }
+	err = r.CreateOrUpdate(logger, cabundleConfig, instance, func() error {
+		kappnavutils.CustomizeConfigMap(cabundleConfig, instance, "builtin")
+		return nil
+	})
+	if err != nil {
+		if logger.IsEnabled(kappnavutils.LogTypeError) {
+                        logger.Log(kappnavutils.CallerName(), kappnavutils.LogTypeError, fmt.Sprintf("Failed to reconcile the cabundle ConfigMap"+otherLogData+", Error: %s ", err), logName)
+                }
+                return r.ManageError(logger, err, kappnavv1.StatusConditionTypeReconciled, instance)
 	}
 
 	// Create or update kappnav-config
