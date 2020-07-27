@@ -89,7 +89,7 @@ spec:
   extensionContainers:
     oauthProxy:
       repository: quay.io/openshift/origin-oauth-proxy
-      tag: 4.3.0
+      tag: sha256:87aa934f1ba79b8d0d44089c626a7bd30d6a4052aa1b1412fd0b883dc6c02945
       resources:
         enabled: false
         requests:
