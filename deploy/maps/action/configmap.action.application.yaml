@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kappnav.actions.application
+data:
+  url-actions: |
+    [
+      { 
+        "name":"edit", 
+        "text":"Edit YAML", 
+        "text.nls":"action.url.application.edit.text", 
+        "description":"Edit Appliation YAML", 
+        "description.nls":"action.url.application.edit.desc", 
+        "url-pattern":"${builtin.openshift-admin-console-url}/k8s/ns/${resource.$.metadata.namespace}/${snippet.transformApiVersion(${resource.$.apiVersion})}~${resource.$.kind}/${resource.$.metadata.name}/yaml", 
+        "open-window": "tab", 
+        "menu-item": "true" 
+      }
+    ]
+  snippets: |
+    {
+      "transformApiVersion": "function transformApiVersion(apiVersion)
+            {
+                return apiVersion.replace('/', '~');
+            }"
+    }
