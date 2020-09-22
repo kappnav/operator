@@ -28,6 +28,7 @@ PROJECT=`basename "$CURRENT"`
 ./updateVersionsinYamls.sh
 
 echo "Building ${IMAGE} ${VERSION}"
+operator-sdk version
 operator-sdk build --image-build-args "--pull --build-arg VERSION=${VERSION} --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg PROJECT_NAME=${PROJECT}" ${IMAGE}
 
 # Restore original yaml files
