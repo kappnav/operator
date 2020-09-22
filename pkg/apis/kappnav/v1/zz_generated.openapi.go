@@ -116,11 +116,23 @@ func schema_pkg_apis_kappnav_v1_KappnavSpec(ref common.ReferenceCallback) common
 							},
 						},
 					},
+					"autoCreateKinds": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("./pkg/apis/kappnav/v1.AutoCreateKindConfiguration"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"./pkg/apis/kappnav/v1.Environment", "./pkg/apis/kappnav/v1.KappnavContainerConfiguration", "./pkg/apis/kappnav/v1.KappnavImageConfiguration"},
+			"./pkg/apis/kappnav/v1.AutoCreateKindConfiguration", "./pkg/apis/kappnav/v1.Environment", "./pkg/apis/kappnav/v1.KappnavContainerConfiguration", "./pkg/apis/kappnav/v1.KappnavImageConfiguration"},
 	}
 }
 

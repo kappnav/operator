@@ -107,6 +107,15 @@ spec:
                 tag:
                   type: string
               type: object
+            autoCreateKinds:
+              items:
+                properties:
+                  group:
+                    type: string
+                  kind:
+                    type: string
+                type: object
+              type: array
             env:
               properties:
                 kubeEnv:
