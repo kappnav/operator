@@ -21,10 +21,10 @@ See [README](https://github.com/kappnav/README#install)
 
 ## Local Development
 
-This project was developed with Operator SDK v0.10.0.
+This project was developed with Operator SDK v0.15.2.
 
 Install the Operator SDK using https://github.com/kappnav/build/blob/master/install-operator-sdk.sh.  Alternatively, you could do it by hand using the installation instructions for the Operator SDK CLI:
-https://github.com/operator-framework/operator-sdk/blob/master/doc/user/install-operator-sdk.md (replace the RELEASE_VERSION in the instructions with v0.10.0 since it may not compile with newer versions).
+https://github.com/operator-framework/operator-sdk/blob/master/doc/user/install-operator-sdk.md (replace the RELEASE_VERSION in the instructions with v0.15.2 since it may not compile with newer versions).
 
 Prerequisites for the Operator SDK are listed here: https://github.com/operator-framework/operator-sdk
 

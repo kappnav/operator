@@ -23,6 +23,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/discovery"
@@ -32,7 +33,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 )
 
@@ -90,7 +90,7 @@ func (r *ReconcilerBase) SetDiscoveryClient(discovery discovery.DiscoveryInterfa
 
 // CreateOrUpdate ...
 func (r *ReconcilerBase) CreateOrUpdate(logger Logger, obj metav1.Object, owner metav1.Object, reconcile func() error) error {
-	mutate := func(o runtime.Object) error {
+	mutate := func() error {
 		err := reconcile()
 		return err
 	}
@@ -99,7 +99,7 @@ func (r *ReconcilerBase) CreateOrUpdate(logger Logger, obj metav1.Object, owner 
 	runtimeObj, ok := obj.(runtime.Object)
 	if !ok {
 		err := fmt.Errorf("%T is not a runtime.Object", obj)
-		if (logger.IsEnabled(LogTypeError)) {
+		if logger.IsEnabled(LogTypeError) {
 			logger.Log(CallerName(), LogTypeError, fmt.Sprintf("Failed to convert into runtime.Object, Error: %s ", err), logName)
 		}
 		return err
@@ -112,9 +112,9 @@ func (r *ReconcilerBase) CreateOrUpdate(logger Logger, obj metav1.Object, owner 
 	var gvk schema.GroupVersionKind
 	gvk, err = apiutil.GVKForObject(runtimeObj, r.scheme)
 	if err == nil {
-		if (logger.IsEnabled(LogTypeInfo)) {
+		if logger.IsEnabled(LogTypeInfo) {
 			logger.Log(CallerName(), LogTypeInfo, fmt.Sprintf("Reconciled, Kind: %s, Name: %s, Status: %s ", gvk.Kind, obj.GetName(), result), logName)
-		}			
+		}
 	}
 
 	return err
@@ -127,7 +127,7 @@ func (r *ReconcilerBase) DeleteResource(obj runtime.Object) error {
 	err := r.client.Delete(context.TODO(), obj)
 	if err != nil {
 		if !apierrors.IsNotFound(err) {
-			if (logger.IsEnabled(LogTypeError)) {
+			if logger.IsEnabled(LogTypeError) {
 				logger.Log(CallerName(), LogTypeError, fmt.Sprintf("Unable to delete object: %s, Error: %s ", obj, err), logName)
 			}
 			return err
@@ -138,7 +138,7 @@ func (r *ReconcilerBase) DeleteResource(obj runtime.Object) error {
 	metaObj, ok := obj.(metav1.Object)
 	if !ok {
 		err := fmt.Errorf("%T is not a runtime.Object", obj)
-		if (logger.IsEnabled(LogTypeError)) {
+		if logger.IsEnabled(LogTypeError) {
 			logger.Log(CallerName(), LogTypeError, fmt.Sprintf("Failed to convert into runtime.Object, Error: %s ", err), logName)
 		}
 		return err
@@ -147,7 +147,7 @@ func (r *ReconcilerBase) DeleteResource(obj runtime.Object) error {
 	var gvk schema.GroupVersionKind
 	gvk, err = apiutil.GVKForObject(obj, r.scheme)
 	if err == nil {
-		if (logger.IsEnabled(LogTypeInfo)) {
+		if logger.IsEnabled(LogTypeInfo) {
 			logger.Log(CallerName(), LogTypeInfo, fmt.Sprintf("Reconciled, Kind: %s, Name: %s, Status: deleted", gvk.Kind, metaObj.GetName()), logName)
 		}
 	}
@@ -167,7 +167,7 @@ func (r *ReconcilerBase) DeleteResources(resources []runtime.Object) error {
 
 // GetOperatorConfigMap ...
 func (r *ReconcilerBase) GetOperatorConfigMap(logger Logger, name string, ns string) (*corev1.ConfigMap, error) {
-	if (logger.IsEnabled(LogTypeInfo)) {
+	if logger.IsEnabled(LogTypeInfo) {
 		logger.Log(CallerName(), LogTypeInfo, fmt.Sprintf("Attempting to read ConfigMap, name: %s, namespace: %s", name, ns), logName)
 	}
 	u := &unstructured.Unstructured{}
@@ -231,7 +231,7 @@ func (r *ReconcilerBase) ManageError(logger Logger, issue error, conditionType k
 
 	err := r.GetClient().Status().Update(context.Background(), cr)
 	if err != nil {
-		if (logger.IsEnabled(LogTypeError)) {
+		if logger.IsEnabled(LogTypeError) {
 			logger.Log(CallerName(), LogTypeError, fmt.Sprintf("Unable to update status, Error: %s ", err), logName)
 		}
 		return reconcile.Result{
@@ -261,7 +261,7 @@ func (r *ReconcilerBase) ManageError(logger Logger, issue error, conditionType k
 
 // ManageSuccess ...
 func (r *ReconcilerBase) ManageSuccess(logger Logger, conditionType kappnavv1.StatusConditionType, cr *kappnavv1.Kappnav) (reconcile.Result, error) {
-	
+
 	oldCondition := GetCondition(conditionType, &cr.Status)
 	if oldCondition == nil {
 		oldCondition = &kappnavv1.StatusCondition{LastUpdateTime: metav1.Time{}}
@@ -286,7 +286,7 @@ func (r *ReconcilerBase) ManageSuccess(logger Logger, conditionType kappnavv1.St
 	SetCondition(statusCondition, &cr.Status)
 	err := r.GetClient().Status().Update(context.Background(), cr)
 	if err != nil {
-		if (logger.IsEnabled(LogTypeError)) {
+		if logger.IsEnabled(LogTypeError) {
 			logger.Log(CallerName(), LogTypeError, fmt.Sprintf("Unable to update status, Error: %s ", err), logName)
 		}
 		return reconcile.Result{
@@ -299,11 +299,11 @@ func (r *ReconcilerBase) ManageSuccess(logger Logger, conditionType kappnavv1.St
 
 // IsGroupVersionSupported ...
 func (r *ReconcilerBase) IsGroupVersionSupported(groupVersion string) (bool, error) {
-	logger := NewLogger(true)  //log in JSON format
+	logger := NewLogger(true) //log in JSON format
 
 	cli, err := r.GetDiscoveryClient()
 	if err != nil {
-		if (logger.IsEnabled(LogTypeError)) {
+		if logger.IsEnabled(LogTypeError) {
 			logger.Log(CallerName(), LogTypeError, fmt.Sprintf("Failed to return a discovery client for the current reconciler, Error: %s ", err), logName)
 		}
 		return false, err
