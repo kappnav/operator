@@ -13,9 +13,12 @@ type KindActionMappingSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
-	Precedence      int                    `json:"precedence,omitempty"`
-	Mappings        []MappingConfiguration `json:"mappings,omitempty"`
-	StatusMappings  []MappingConfiguration `json:"statusMappings,omitempty"`
+	Precedence int `json:"precedence,omitempty"`
+	// +listType=map
+	Mappings []MappingConfiguration `json:"mappings,omitempty"`
+	// +listType=map
+	StatusMappings []MappingConfiguration `json:"statusMappings,omitempty"`
+	// +listType=map
 	SectionMappings []MappingConfiguration `json:"sectionMappings,omitempty"`
 }
 

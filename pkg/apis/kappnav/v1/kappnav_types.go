@@ -31,7 +31,8 @@ type KappnavSpec struct {
 	Image               *KappnavImageConfiguration                `json:"image,omitempty"`
 	Env                 *Environment                              `json:"env,omitempty"`
 	Logging             map[string]string                         `json:"logging,omitempty"`
-	AutoCreateKinds     []AutoCreateKindConfiguration             `json:"autoCreateKinds,omitempty"`
+	// +listType=map
+	AutoCreateKinds []AutoCreateKindConfiguration `json:"autoCreateKinds,omitempty"`
 }
 
 // KappnavContainerConfiguration defines the configuration for a Kappnav container
@@ -73,13 +74,14 @@ type Environment struct {
 
 // AutoCreateKinds ...
 type AutoCreateKindConfiguration struct {
-	Group    string `json:"group,omitempty"`
-	Kind     string `json:"kind,omitempty"`
+	Group string `json:"group,omitempty"`
+	Kind  string `json:"kind,omitempty"`
 }
 
 // KappnavStatus defines the observed state of Kappnav
 // +k8s:openapi-gen=true
 type KappnavStatus struct {
+	// +listType=map
 	Conditions []StatusCondition `json:"conditions,omitempty"`
 }
 
