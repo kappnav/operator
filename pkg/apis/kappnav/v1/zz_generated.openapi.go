@@ -22,17 +22,18 @@ func schema_pkg_apis_kappnav_v1_Kappnav(ref common.ReferenceCallback) common.Ope
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "Kappnav is the Schema for the kappnavs API",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"apiVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -65,6 +66,7 @@ func schema_pkg_apis_kappnav_v1_KappnavSpec(ref common.ReferenceCallback) common
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "KappnavSpec defines the desired state of Kappnav",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"appNavAPI": {
 						SchemaProps: spec.SchemaProps{
@@ -85,6 +87,7 @@ func schema_pkg_apis_kappnav_v1_KappnavSpec(ref common.ReferenceCallback) common
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Ref: ref("./pkg/apis/kappnav/v1.KappnavContainerConfiguration"),
@@ -107,6 +110,7 @@ func schema_pkg_apis_kappnav_v1_KappnavSpec(ref common.ReferenceCallback) common
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Type:   []string{"string"},
@@ -116,11 +120,28 @@ func schema_pkg_apis_kappnav_v1_KappnavSpec(ref common.ReferenceCallback) common
 							},
 						},
 					},
+					"autoCreateKinds": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("./pkg/apis/kappnav/v1.AutoCreateKindConfiguration"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"./pkg/apis/kappnav/v1.Environment", "./pkg/apis/kappnav/v1.KappnavContainerConfiguration", "./pkg/apis/kappnav/v1.KappnavImageConfiguration"},
+			"./pkg/apis/kappnav/v1.AutoCreateKindConfiguration", "./pkg/apis/kappnav/v1.Environment", "./pkg/apis/kappnav/v1.KappnavContainerConfiguration", "./pkg/apis/kappnav/v1.KappnavImageConfiguration"},
 	}
 }
 
@@ -129,8 +150,14 @@ func schema_pkg_apis_kappnav_v1_KappnavStatus(ref common.ReferenceCallback) comm
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "KappnavStatus defines the observed state of Kappnav",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
