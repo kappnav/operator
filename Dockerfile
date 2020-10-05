@@ -69,6 +69,11 @@ COPY licenses/ /licenses/
 COPY build/bin /usr/local/bin
 RUN  /usr/local/bin/user_setup
 
+# Update base layers
+RUN microdnf install -y yum \
+    && yum update -y \
+    && microdnf remove yum
+
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 USER ${USER_UID}
