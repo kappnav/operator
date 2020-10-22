@@ -40,6 +40,7 @@ import (
 // KappnavExtension extends the reconciler to manage additional resources.
 type KappnavExtension interface {
 	ReconcileAdditionalResources(logger Logger, request reconcile.Request, r *ReconcilerBase, instance *kappnavv1.Kappnav) (reconcile.Result, error)
+	CustomizeDeploymentAnnotations(deployment *appsv1.Deployment, instance *kappnavv1.Kappnav, annotations map[string]string, r *ReconcilerBase, logger Logger, otherLogData string, logName string)
 }
 
 const (
@@ -660,7 +661,7 @@ func createOAuthProxyArgs(instance *kappnavv1.Kappnav) []string {
 		"--cookie-expire=2h",
 		"--skip-provider-button=true",
 		"--skip-auth-regex=.*appLauncher.js|.*featuredApp.js|.*appNavIcon.css|.*KAppNavlogo.svg",
-		"--openshift-ca="+OAuthCABundleVolumeMountPath+"/"+OAuthCABundlePath,
+		"--openshift-ca=" + OAuthCABundleVolumeMountPath + "/" + OAuthCABundlePath,
 		"--openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
 	}
 }
