@@ -628,6 +628,9 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 		kappnavutils.CustomizePodSpec(pts, &uiDeployment.ObjectMeta,
 			kappnavutils.CreateUIDeploymentContainers(pts.Spec.Containers, instance),
 			kappnavutils.CreateUIVolumes(instance), instance)
+		if extension != nil {
+			extension.CustomizeDeploymentAnnotations(uiDeployment, instance, nil, &r.ReconcilerBase, logger, otherLogData, logName)
+		}
 		return nil
 	})
 	if err != nil {
@@ -652,6 +655,9 @@ func (r *ReconcileKappnav) Reconcile(request reconcile.Request) (reconcile.Resul
 		kappnavutils.CustomizeDeployment(controllerDeployment, instance)
 		kappnavutils.CustomizePodSpec(pts, &controllerDeployment.ObjectMeta,
 			kappnavutils.CreateControllerDeploymentContainers(pts.Spec.Containers, instance), nil, instance)
+		if extension != nil {
+			extension.CustomizeDeploymentAnnotations(controllerDeployment, instance, nil, &r.ReconcilerBase, logger, otherLogData, logName)
+		}
 		return nil
 	})
 	if err != nil {
