@@ -35,7 +35,7 @@ data:
         "url-pattern":"${builtin.openshift-admin-console-url}/k8s/ns/${resource.$.metadata.namespace}/pods/${resource.$.metadata.name}",
 {{ end }}
         "open-window": "current", 
-        "menu-item": "false" 
+        "menu-item": "true" 
       }
     ]
   snippets: |

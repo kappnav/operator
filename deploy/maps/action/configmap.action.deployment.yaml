@@ -89,6 +89,6 @@ data:
         "url-pattern":"${builtin.openshift-console-url}/deployment/${resource.$.metadata.namespace}/${resource.$.metadata.name}?namespace=${resource.$.metadata.namespace}",
 {{ end }}
         "open-window": "current", 
-        "menu-item": "false" 
+        "menu-item": "true" 
       }
     ]
