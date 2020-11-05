@@ -33,6 +33,6 @@ data:
         "url-pattern":"",
 {{ end }}
         "open-window": "current", 
-        "menu-item": "false" 
+        "menu-item": "true" 
       }
     ]
